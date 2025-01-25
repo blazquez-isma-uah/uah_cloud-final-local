@@ -3,8 +3,7 @@ services:
     build:
       context: ./backend_peliculas
     container_name: peliculas_backend  
-    ports:
-      - "8001:8001"
+    ports: []  # No expone el puerto a la máquina local
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/fbm_peliculas?useSSL=false&serverTimezone=Europe/Madrid&allowPublicKeyRetrieval=true
@@ -18,8 +17,7 @@ services:
     build:
       context: ./backend_usuarios
     container_name: usuarios_backend  
-    ports:
-      - "8002:8002"
+    ports: []  # No expone el puerto a la máquina local
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/fbm_usuarios?useSSL=false&serverTimezone=Europe/Madrid&allowPublicKeyRetrieval=true
@@ -33,8 +31,7 @@ services:
     build:
       context: ./frontend
     container_name: frontend
-    ports:
-      - "8000:8000"
+    ports: []  # No expone el puerto a la máquina local
     environment:
       VIRTUAL_HOST: frontend.local
     networks:
