@@ -1,0 +1,78 @@
+services:
+  peliculas_backend:
+    build:
+      context: ./backend_peliculas
+    container_name: peliculas_backend  
+    ports:
+      - "8001:8001"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/fbm_peliculas?useSSL=false&serverTimezone=Europe/Madrid&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ismaAdmin
+      SPRING_DATASOURCE_PASSWORD: 4mysqlIsmaPassword_
+      VIRTUAL_HOST: peliculas.local
+    networks:
+      - trabajo_contenedores  
+
+  usuarios_backend:
+    build:
+      context: ./backend_usuarios
+    container_name: usuarios_backend  
+    ports:
+      - "8002:8002"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/fbm_usuarios?useSSL=false&serverTimezone=Europe/Madrid&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ismaAdmin
+      SPRING_DATASOURCE_PASSWORD: 4mysqlIsmaPassword_
+      VIRTUAL_HOST: usuarios.local
+    networks:
+      - trabajo_contenedores  
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "8000:8000"
+    environment:
+      VIRTUAL_HOST: frontend.local
+    networks:
+      - trabajo_contenedores
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:1.7
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro # Para detectar otros contenedores
+    networks:
+      trabajo_contenedores:
+        aliases:
+        - usuarios.local
+        - peliculas.local
+        - frontend.local
+
+  portainer:
+    image: portainer/portainer-ce:2.26.1
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Permite a Portainer gestionar Docker
+      - ./portainer-data:/data # Persistencia de datos
+    networks:
+      - trabajo_contenedores
+
+
+networks:
+  trabajo_contenedores:
+    driver: bridge
+
+
+
+
+
