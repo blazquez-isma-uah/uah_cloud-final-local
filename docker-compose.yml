@@ -27,11 +27,23 @@ services:
     networks:
       - trabajo_contenedores  
 
+  password_generator_backend:
+    build: 
+      context: ./password_generator_backend
+    container_name: password_generator_backend
+    ports: []  # No expone el puerto a la máquina local
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      VIRTUAL_HOST: passwordgen.local
+    networks:
+      - trabajo_contenedores
+
   frontend:
     build:
       context: ./frontend
     container_name: frontend
-    ports: []  # No expone el puerto a la máquina local
+    ports: []   #No expone el puerto a la máquina local
+      #- 8000:8000
     environment:
       VIRTUAL_HOST: frontend.local
     networks:
@@ -51,6 +63,7 @@ services:
         - usuarios.local
         - peliculas.local
         - frontend.local
+        - passwordgen.local
 
   portainer:
     image: portainer/portainer-ce:2.26.1
