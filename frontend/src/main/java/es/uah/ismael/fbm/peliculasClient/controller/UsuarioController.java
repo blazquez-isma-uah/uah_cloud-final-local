@@ -3,6 +3,7 @@ package es.uah.ismael.fbm.peliculasClient.controller;
 import es.uah.ismael.fbm.peliculasClient.model.Rol;
 import es.uah.ismael.fbm.peliculasClient.model.Usuario;
 import es.uah.ismael.fbm.peliculasClient.paginator.PageRender;
+import es.uah.ismael.fbm.peliculasClient.service.IPasswordService;
 import es.uah.ismael.fbm.peliculasClient.service.IRolService;
 import es.uah.ismael.fbm.peliculasClient.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class UsuarioController {
 
     @Autowired
     IRolService rolService;
+
+    @Autowired
+    IPasswordService passwordService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -165,5 +169,16 @@ public class UsuarioController {
         }
         return "redirect:/cusuarios/ver/" + usuario.getIdUsuario();
     }
+
+    @GetMapping("/generarPassword")
+    @ResponseBody
+    public String generarPassword(
+            @RequestParam(defaultValue = "12") int length,
+            @RequestParam(defaultValue = "true") boolean useUpper,
+            @RequestParam(defaultValue = "true") boolean useNumbers,
+            @RequestParam(defaultValue = "true") boolean useSpecials) {
+        return passwordService.generarPassword(length, useUpper, useNumbers, useSpecials);
+    }
+
 
 }

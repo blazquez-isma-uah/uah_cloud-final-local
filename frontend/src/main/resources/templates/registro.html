@@ -27,12 +27,33 @@
             <label for="clave" class="form-label">Clave</label>
             <input type="password" class="form-control" th:field="*{clave}" id="clave" name="clave"
                    placeholder="Escriba la clave del usuario" required="required">
+            <button type="button" class="btn btn-secondary" onclick="generarPassword()">Generar</button>
         </div>
         <div class="mb-3">
             <label for="correo" class="form-label">Correo</label>
             <input type="text" class="form-control" th:field="*{correo}" id="correo" name="correo"
                    placeholder="Escriba el correo del usuario" required="required">
         </div>
+
+        <!-- Modal para mostrar la contraseña generada -->
+        <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="passwordModalLabel">Contraseña Generada</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <span id="passwordGenerada" style="font-size: 1.2rem; font-weight: bold; display: block;"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="generarPassword()">Generar otra</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-dark">Registrarse</button>
     </form>
 
@@ -42,6 +63,26 @@
 </div>
 
 <script th:src="@{/js/bootstrap.min.js}"></script>
+<script>
+    function generarPassword() {
+        fetch('/cusuarios/generarPassword?length=12&useUpper=true&useNumbers=true&useSpecials=true')
+            .then(response => response.text())
+            .then(password => {
+                document.getElementById("passwordGenerada").innerText = password.trim();
+                // Si el modal ya está abierto, solo actualiza la contraseña
+                let passwordModalElement = document.getElementById('passwordModal');
+                let passwordModalInstance = bootstrap.Modal.getInstance(passwordModalElement);
+
+                // Si el modal no existe (ha sido cerrado), se crea una nueva instancia
+                if (!passwordModalInstance) {
+                    passwordModalInstance = new bootstrap.Modal(passwordModalElement);
+                }
+
+                passwordModalInstance.show();
+            })
+            .catch(error => console.error('Error generando la contraseña:', error));
+    }
+</script>
 
 </body>
 </html>
