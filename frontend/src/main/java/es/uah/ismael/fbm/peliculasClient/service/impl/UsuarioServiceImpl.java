@@ -27,7 +27,6 @@ public class UsuarioServiceImpl implements IUsuarioService {
     public Page<Usuario> buscarTodos(Pageable pageable) {
         Usuario[] usuarios = template.getForObject(url, Usuario[].class);
         List<Usuario> listaUsuarios = usuarios != null ? Arrays.asList(usuarios) : new ArrayList<>();
-        System.out.println("Usuarios: " + listaUsuarios.size());
         return PageUtil.paginate(listaUsuarios, pageable);
     }
 

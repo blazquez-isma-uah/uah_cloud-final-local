@@ -34,11 +34,9 @@ public class WebSecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login").permitAll()
                         .defaultSuccessUrl("/cpeliculas", true))
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/js/**", "/css/**", "/login", "/cusuarios/registrar", "/cusuarios/listado",
-                                "/cusuarios/generarPassword")
-                        .permitAll()
-                        .anyRequest().authenticated()
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authz -> authz
+                    .requestMatchers("/**").permitAll()
                 );
         return http.build();
     }

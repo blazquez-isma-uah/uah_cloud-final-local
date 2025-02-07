@@ -54,7 +54,6 @@ public class CriticaController {
         critica.setIdPelicula(idPelicula);
         critica.setTituloPelicula(peliculaService.buscarTituloPeliculaPorId(idPelicula));
         critica.setUsuario(usuarioService.buscarUsuarioPorNombre(principal.getName()));
-        System.out.println("Critica: " + critica);
         model.addAttribute("critica", critica);
         return "criticas/formCritica";
     }
@@ -70,7 +69,6 @@ public class CriticaController {
 
     @PostMapping("/guardar/")
     public String guardarCritica(@ModelAttribute(name="critica") Critica critica) {
-        System.out.println("Usuario: " + critica.getUsuario());
         critica.setFecha(LocalDate.now());
         criticaService.guardarCritica(critica);
         return "redirect:/cpeliculas/ver/" + critica.getIdPelicula();
