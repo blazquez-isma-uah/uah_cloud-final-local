@@ -55,9 +55,9 @@
                    placeholder="Escriba la sinopsis de la película" required="required">
         </div>
 
-        <img th:if="${pelicula.imagenPortada != null && #strings.length(pelicula.imagenPortada) > 0}" class="img-thumbnail rounded float-left"
+        <!-- <img th:if="${pelicula.imagenPortada != null && #strings.length(pelicula.imagenPortada) > 0}" class="img-thumbnail rounded float-left"
              style="max-width: 25%;" th:src="@{'/cpeliculas/uploads/' + ${pelicula.imagenPortada}}"
-             th:alt="${pelicula.imagenPortada}" />
+             th:alt="${pelicula.imagenPortada}" /> -->
 
         <div class="mb-3">
             <label for="imagen" class="col-sm-2 col-form-label">Imagen de Portada</label>

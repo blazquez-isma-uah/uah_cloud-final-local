@@ -39,8 +39,8 @@ public class PeliculaController {
     @Autowired
     private IPeliculaService peliculasService;
 
-    @Autowired
-    private IUploadFileService uploadFileService;
+    // @Autowired
+    // private IUploadFileService uploadFileService;
 
     @Autowired
     private IActorService actorService;
@@ -93,19 +93,19 @@ public class PeliculaController {
                                   @RequestParam("actoresIds") Optional<List<Integer>> actoresIds,
                                   RedirectAttributes attributes) {
 
-        if (!imagen.isEmpty()) {
-            if(pelicula.getIdPelicula() != null && pelicula.getIdPelicula() > 0 &&
-                    pelicula.getImagenPortada() != null && !pelicula.getImagenPortada().isEmpty()) {
-                uploadFileService.delete(pelicula.getImagenPortada());
-            }
-            String newImagenFilename = null;
-            try {
-                newImagenFilename = uploadFileService.copy(imagen);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            pelicula.setImagenPortada(newImagenFilename);
-        }
+        // if (!imagen.isEmpty()) {
+        //     if(pelicula.getIdPelicula() != null && pelicula.getIdPelicula() > 0 &&
+        //             pelicula.getImagenPortada() != null && !pelicula.getImagenPortada().isEmpty()) {
+        //         uploadFileService.delete(pelicula.getImagenPortada());
+        //     }
+        //     String newImagenFilename = null;
+        //     try {
+        //         newImagenFilename = uploadFileService.copy(imagen);
+        //     } catch (Exception e) {
+        //         e.printStackTrace();
+        //     }
+        //     pelicula.setImagenPortada(newImagenFilename);
+        // }
 
         pelicula.setActores(new ArrayList<>());
         if (actoresIds.isPresent()) {
@@ -123,9 +123,9 @@ public class PeliculaController {
     public String eliminarPelicula(@PathVariable("id") Integer id, RedirectAttributes attributes) {
         Pelicula pelicula = peliculasService.buscarPeliculaPorId(id);
         if(pelicula != null) {
-            if(pelicula.getImagenPortada() != null && !pelicula.getImagenPortada().isEmpty()) {
-                uploadFileService.delete(pelicula.getImagenPortada());
-            }
+            // if(pelicula.getImagenPortada() != null && !pelicula.getImagenPortada().isEmpty()) {
+            //     uploadFileService.delete(pelicula.getImagenPortada());
+            // }
             peliculasService.eliminarPelicula(id);
             attributes.addFlashAttribute("msg", "Película eliminada correctamente");
         } else {
@@ -205,20 +205,20 @@ public class PeliculaController {
         return "peliculas/listPeliculas";
     }
 
-    @GetMapping("/uploads/{filename:.+}")
-    public ResponseEntity<Resource> verImagen(@PathVariable String filename) {
-        Resource recurso = null;
-        try {
-            recurso = uploadFileService.load(filename);
-        } catch (MalformedURLException e) {
-            return ResponseEntity.notFound()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-                    .build();
-        }
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"")
-                .body(recurso);
-    }
+    // @GetMapping("/uploads/{filename:.+}")
+    // public ResponseEntity<Resource> verImagen(@PathVariable String filename) {
+    //     Resource recurso = null;
+    //     try {
+    //         recurso = uploadFileService.load(filename);
+    //     } catch (MalformedURLException e) {
+    //         return ResponseEntity.notFound()
+    //                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+    //                 .build();
+    //     }
+    //     return ResponseEntity.ok()
+    //             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"")
+    //             .body(recurso);
+    // }
 
     @GetMapping(value = {"/", "/home", ""})
     public String home(Model model, Principal principal) {

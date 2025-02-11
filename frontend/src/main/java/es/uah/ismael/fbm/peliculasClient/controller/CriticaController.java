@@ -101,7 +101,7 @@ public class CriticaController {
     }
 
     @GetMapping("/buscarPor")
-    public String buscarCriticasPor(Model model,
+    public String buscarCriticasPor(Model model, Principal principal,
                                     @RequestParam("searchField") String searchField,
                                     @RequestParam("tituloPelicula") Optional<String> tituloPelicula,
                                     @RequestParam("nombreUsuario") Optional<String> nombreUsuario,
@@ -124,6 +124,11 @@ public class CriticaController {
                     model.addAttribute("msg", "No se ha encontrado la película");
                     model.addAttribute("searchFields", Arrays.asList("pelicula", "usuario"));
                     model.addAttribute("searchField", "pelicula");
+                    if (principal != null) {
+                        Usuario usuario = usuarioService.buscarUsuarioPorNombre(principal.getName());
+                        model.addAttribute("username", usuario.getNombre());
+                        model.addAttribute("roles", usuario.getRoles().stream().map(Rol::getAuthority).toList());
+                    }
                     return "criticas/searchCritica";
                 }
             }
@@ -142,6 +147,11 @@ public class CriticaController {
                     model.addAttribute("msg", "No se ha encontrado el usuario");
                     model.addAttribute("searchFields", Arrays.asList("pelicula", "usuario"));
                     model.addAttribute("searchField", "pelicula");
+                    if (principal != null) {
+                        Usuario user = usuarioService.buscarUsuarioPorNombre(principal.getName());
+                        model.addAttribute("username", user.getNombre());
+                        model.addAttribute("roles", user.getRoles().stream().map(Rol::getAuthority).toList());
+                    }
                     return "criticas/searchCritica";
                 }
             }

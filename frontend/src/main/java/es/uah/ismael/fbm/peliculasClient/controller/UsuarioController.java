@@ -179,6 +179,4 @@ public class UsuarioController {
             @RequestParam(defaultValue = "true") boolean useSpecials) {
         return passwordService.generarPassword(length, useUpper, useNumbers, useSpecials);
     }
-
-
 }
