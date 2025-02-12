@@ -3,8 +3,10 @@ package es.uah.ismael.fbm.usuariosCriticasServer.controller;
 import es.uah.ismael.fbm.usuariosCriticasServer.model.Usuario;
 import es.uah.ismael.fbm.usuariosCriticasServer.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -13,9 +15,25 @@ public class UsuarioController {
     @Autowired
     IUsuarioService usuarioService;
 
+    @Value("${server.version}")
+    private String serverVersion;
+
     @GetMapping("/usuarios")
     public List<Usuario> buscarTodos() {
-        return usuarioService.buscarTodos();
+        List<Usuario> usuarios = usuarioService.buscarTodos();
+
+        if ("v2".equals(serverVersion)) {
+            // Seleccionar la mitad de los usuarios de manera aleatoria
+            Collections.shuffle(usuarios);
+            int mitad = usuarios.size() / 2;
+            usuarios = usuarios.subList(0, mitad);
+            usuarios.forEach(u -> {
+                u.setNombre(u.getNombre().toUpperCase());
+                u.setCorreo(u.getCorreo().toUpperCase());
+            });
+        }
+
+        return usuarios;
     }
 
     @GetMapping("/usuarios/{id}")

@@ -6,9 +6,13 @@ import es.uah.ismael.fbm.peliculasServer.service.IActorService;
 import es.uah.ismael.fbm.peliculasServer.service.IPeliculaService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @RestController
 public class PeliculaController {
@@ -21,9 +25,20 @@ public class PeliculaController {
     @Autowired
     private IActorService actorService;
 
+    @Value("${server.version}")
+    private String serverVersion;
+
     @GetMapping("/peliculas")
     public List<Pelicula> buscarTodos() {
-        return peliculaService.buscarTodas();
+        List<Pelicula> peliculas = peliculaService.buscarTodas();
+        if ("v2".equals(serverVersion)) {
+            // Seleccionar la mitad de las películas de manera aleatoria
+            Collections.shuffle(peliculas);
+            int mitad = peliculas.size() / 2;
+            peliculas = peliculas.subList(0, mitad);
+            peliculas.forEach(p -> p.setTitulo(p.getTitulo().toUpperCase()));
+        }
+        return peliculas;
     }
 
     @GetMapping("/peliculas/{id}")
