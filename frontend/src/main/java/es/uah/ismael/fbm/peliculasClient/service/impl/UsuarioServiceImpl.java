@@ -3,10 +3,13 @@ package es.uah.ismael.fbm.peliculasClient.service.impl;
 import es.uah.ismael.fbm.peliculasClient.model.Usuario;
 import es.uah.ismael.fbm.peliculasClient.paginator.PageUtil;
 import es.uah.ismael.fbm.peliculasClient.service.IUsuarioService;
+import es.utils.RestUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +28,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
     @Override
     public Page<Usuario> buscarTodos(Pageable pageable) {
-        Usuario[] usuarios = template.getForObject(url, Usuario[].class);
+        // Usuario[] usuarios = template.getForObject(url, Usuario[].class);
+        Usuario[] usuarios = RestUtils.getResponseWithHeaders(template, url, HttpMethod.GET, Usuario[].class);
         List<Usuario> listaUsuarios = usuarios != null ? Arrays.asList(usuarios) : new ArrayList<>();
         return PageUtil.paginate(listaUsuarios, pageable);
     }
