@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Botones</title>
+    <script th:src="@{/js/session.js}"></script>
 </head>
 <body>
 <div th:fragment="botones" class="text-end">
     <button class="btn btn-secondary" onclick="goBack()">Atrás</button>
     <a class="btn btn-primary" role="button" th:href="@{/cpeliculas}">Ir a Inicio</a>
+    <span id="sessionUser" th:if="${#authorization.expression('isAuthenticated()')}" sec:authentication="name" style="display:none;"></span>
+    <span id="sessionUser" th:unless="${#authorization.expression('isAuthenticated()')}" style="display:none;">anonymous</span>
 </div>
 </body>
 </html>
