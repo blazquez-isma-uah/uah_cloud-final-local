@@ -45,6 +45,7 @@ services:
     ports: []   #No expone el puerto a la máquina local
       #- 8000:8000
     environment:
+      SPRING_PROFILES_ACTIVE: docker
       VIRTUAL_HOST: frontend.local
     networks:
       - trabajo_contenedores
